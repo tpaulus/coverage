@@ -1,6 +1,7 @@
 #! /usr/bin/python
 # Written By Tom Paulus, @tompaulus, www.tompaulus.com
 
+import os
 import sys
 import requests
 from datetime import datetime
@@ -22,10 +23,12 @@ class SendGrid(object):
         data['html'] = message_html
         sg_response = requests.post('https://api.sendgrid.com/api/mail.send.json', data)
 
-        if sg_response.json()['message'] == 'success':
+    	json = sg_response.json
+
+        if json['message'] == 'success':
             return True, None
         else:
-            return False, sg_response.json()['errors']
+            return False, json['errors']
 
 
 def read_api_keys(rel_file_path="./API.txt"):
@@ -74,25 +77,33 @@ def make_email(error, date):
 
 
 if __name__ == "__main__":
+    os.chdir(os.path.dirname(sys.argv[0]))
+
     d = datetime.now(tz=pytz.timezone('US/Pacific')).strftime('%A, %B %d, %Y')
-    # e = read_pipe()
-    e = """
-Traceback (most recent call last):
-  File "test.py", line 7, in <module>
-    l[3]  # List Index out of Range Error
-IndexError: list index out of range
+    e = read_pipe()
+#     e = """
+# Traceback (most recent call last):
+#   File "test.py", line 7, in <module>
+#     l[3]  # List Index out of Range Error
+# IndexError: list index out of range
+#
+#     """
 
-    """
-
+    while e.startswith(' '):		# Remove Leading Spaces on e
+            e = e[1:]
+    while e.endswith(' '):			# Remove Trailing Spaces
+            e = e[:-1]
+    
     username, password = read_api_keys()
     # Uncomment the lines below if you want to bypass the external file.
     # username = ''
     # password = ''
 
-    response, e = SendGrid(username, password).send('tom@tompaulus.com', 'Fatal Script Error', make_email(e, d))
+    if e != '':
+	    response, e = SendGrid(username, password).send('tom@tompaulus.com', 'Fatal Script Error', make_email(e, d))
 
-    if not response:
-        print e
+	    if not response:
+    		print e
 
 
 

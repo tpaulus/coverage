@@ -3,10 +3,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         
-        <!-- Facebook sharing information tags -->
-        <meta property="og:title" content="*|MC:SUBJECT|*" />
-        
-        <title>*|MC:SUBJECT|*</title>
+        <title>Fatal Script Error</title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 		<style type="text/css">
 			/* Client-specific Styles */
 			#outlook a{padding:0;} /* Force Outlook to provide a "view in browser" button. */
@@ -99,7 +97,7 @@
 				margin-right:0;
 				margin-bottom:10px;
 				margin-left:0;
-				/*@editable*/ text-align:left;
+				/*@editable*/ text-align:right !important;
 			}
 
 			/**
@@ -162,10 +160,37 @@
 				/*@editable*/ text-decoration:underline;
 			}
 
-			#headerImage{
-				height:auto;
-				max-width:600px !important;
+			.header_text{
+				height:150px;
+				width:600px;
+				background-color: #DD3333;
 			}
+			
+			.header_text > h1 {
+				position: absolute;
+				color: #FFF;
+				text-align: left;
+				vertical-align: middle;
+				padding-left: 15px;
+				padding-top: 55px;
+				font-family: 'Open Sans', sans-serif;
+				font-size: 60px;
+				font-weight: 400;
+				margin: 0;
+			}
+			
+			.header_text > h3 {
+				position: absolute;
+				color: #FFF;
+				text-align: right;
+				padding-top: 65px;
+				padding-right: 5%;
+				font-family: 'Open Sans', sans-serif;
+				font-size: 50px;
+				font-weight: 300;
+				margin: 0;
+			}
+			
 
 			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: MAIN BODY /\/\/\/\/\/\/\/\/\/\ */
 
@@ -237,72 +262,6 @@
 				display:inline;
 				height:auto;
 			}
-
-			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: FOOTER /\/\/\/\/\/\/\/\/\/\ */
-
-			/**
-			* @tab Footer
-			* @section footer style
-			* @tip Set the background color and top border for your email's footer area.
-			* @theme footer
-			*/
-			#templateFooter{
-				/*@editable*/ background-color:#FFFFFF;
-				/*@editable*/ border-top:0;
-			}
-
-			/**
-			* @tab Footer
-			* @section footer text
-			* @tip Set the styling for your email's footer text. Choose a size and color that is easy to read.
-			* @theme footer
-			*/
-			.footerContent div{
-				/*@editable*/ color:#707070;
-				/*@editable*/ font-family:Arial;
-				/*@editable*/ font-size:12px;
-				/*@editable*/ line-height:125%;
-				/*@editable*/ text-align:center;
-			}
-
-			/**
-			* @tab Footer
-			* @section footer link
-			* @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
-			*/
-			.footerContent div a:link, .footerContent div a:visited, /* Yahoo! Mail Override */ .footerContent div a .yshortcuts /* Yahoo! Mail Override */{
-				/*@editable*/ color:#336699;
-				/*@editable*/ font-weight:normal;
-				/*@editable*/ text-decoration:underline;
-			}
-
-			.footerContent img{
-				display:inline;
-			}
-
-			/**
-			* @tab Footer
-			* @section utility bar style
-			* @tip Set the background color and border for your email's footer utility bar.
-			* @theme footer
-			*/
-			#utility{
-				/*@editable*/ background-color:#FFFFFF;
-				/*@editable*/ border:0;
-			}
-
-			/**
-			* @tab Footer
-			* @section utility bar style
-			* @tip Set the background color and border for your email's footer utility bar.
-			*/
-			#utility div{
-				/*@editable*/ text-align:center;
-			}
-
-			#monkeyRewards img{
-				max-width:190px;
-			}
 		</style>
 	</head>
     <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
@@ -319,7 +278,10 @@
                                             <td class="headerContent">
                                             
                                             	<!-- // Begin Module: Standard Header Image \\ -->
-                                            	<img src="https://tompaulus.com/img/Fatal%20Error%20Report.jpg" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+                                            	<div class="header_text">
+                                                     <h1>Fatal Error <small>Report</small></h1>
+                                            	</div>
+                                            	<!-- <img src="https://tompaulus.com/img/Fatal%20Error%20Report.jpg" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext /> -->
                                             	<!-- // End Module: Standard Header Image \\ -->
                                             
                                             </td>
@@ -342,9 +304,8 @@
                                                             <div mc:edit="std_content00">
                                                                 <h1 class="h1">Script Error</h1>
                                                                 <h4 class="h4">Error occurred on: {{ Date }}</h4>
-																<pre>
-                                                                {{ Error Message }}
-                                                                </pre>
+																&nbsp;
+																<pre>{{ Error Message }}</pre>
                                                             </div>
 														</td>
                                                     </tr>
