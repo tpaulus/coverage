@@ -1,0 +1,9 @@
+{
+  "SendGrid": {
+    "username": "",
+    "password": ""
+  },
+  "Mandrill": {
+    "key": ""
+  }
+}

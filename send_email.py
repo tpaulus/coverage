@@ -6,6 +6,8 @@ import sys
 import requests
 from datetime import datetime
 import pytz
+import mandrill  # Comment this line if you don't plan to use Mandrill
+import json
 
 
 class SendGrid(object):
@@ -23,7 +25,7 @@ class SendGrid(object):
         data['html'] = message_html
         sg_response = requests.post('https://api.sendgrid.com/api/mail.send.json', data)
 
-    	json = sg_response.json
+        json = sg_response.json
 
         if json['message'] == 'success':
             return True, None
@@ -31,7 +33,42 @@ class SendGrid(object):
             return False, json['errors']
 
 
-def read_api_keys(rel_file_path="./API.txt"):
+class Mandrill(object):
+    def __init__(self, key):
+        self.client = mandrill.Mandrill(key)
+
+    def send(self, to, to_name, error, date):
+        try:
+            message = {'auto_text': True,
+                       'important': True,
+                       'merge_language': 'mailchimp',
+                       'global_merge_vars': [{'name': 'ERROR', 'content': error},
+                                             {'name': 'DATE', 'content': date}],
+                       'metadata': {'error': error},
+                       'signing_domain': 'tompaulus.com',
+                       'tags': ['Coverage'],
+                       'from_email': 'python@tompaulus.com',
+                       'to': [{'email': to,
+                               'name': to_name,
+                               'type': 'to'}],
+                       'track_opens': True}
+
+            result = self.client.messages.send_template(template_name='fatal-script-error', template_content=[],
+                                                        message=message)
+
+            if result[0]['status'] == 'sent':
+                return True, None
+            else:
+                return False, result[0]['reject_reason']
+
+        except mandrill.Error, e:
+            # Mandrill errors are thrown as exceptions
+            print 'A mandrill error occurred: %s - %s' % (e.__class__, e)
+            # A mandrill error occurred: <class 'mandrill.UnknownSubaccountError'> - No subaccount exists with the id 'customer-123'
+            raise
+
+
+def read_api_keys(rel_file_path="./API.json"):
     """
     :param rel_file_path: Location of the API Key File relative to the file being executed.
     :return sendgrid_user: FancyHands API Key
@@ -71,9 +108,9 @@ def read_pipe():
 
 def make_email(error, date):
     with open('./email_template.html') as template:
-        msg = template.read().replace('{{ Error Message }}', error).replace('{{ Date }}', date)
+        msg = template.read().replace('*|Error Message|*', error).replace('*|Date|*', date)
 
-        return msg
+    return msg
 
 
 if __name__ == "__main__":
@@ -93,20 +130,16 @@ if __name__ == "__main__":
             e = e[1:]
     while e.endswith(' '):			# Remove Trailing Spaces
             e = e[:-1]
-    
-    username, password = read_api_keys()
+
+    credentials_dict = json.loads(open('./API.json').read())
     # Uncomment the lines below if you want to bypass the external file.
     # username = ''
     # password = ''
 
     if e != '':
-	    response, e = SendGrid(username, password).send('tom@tompaulus.com', 'Fatal Script Error', make_email(e, d))
+        # response, e = SendGrid(credentials_dict['SendGrid']['username'], credentials_dict['SendGrid']['password']).send(
+        # 'tom@tompaulus.com', 'Fatal Script Error', make_email(e, d))
+        response, e = Mandrill(credentials_dict['Mandrill']['key']).send('tom@tompaulus.com', 'Tom Paulus', e, d)
 
-	    if not response:
-    		print e
-
-
-
-
-
-
+        if not response:
+            print e

@@ -1,4 +1,0 @@
-SendGrid Login Credentials
-User: JohnDoe
-Pass: Black Cat
-EOF
