@@ -114,7 +114,7 @@ def make_email(error, date):
 
 
 if __name__ == "__main__":
-    os.chdir(os.path.dirname(sys.argv[0]))
+    os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
 
     d = datetime.now(tz=pytz.timezone('US/Pacific')).strftime('%A, %B %d, %Y')
     e = read_pipe()
